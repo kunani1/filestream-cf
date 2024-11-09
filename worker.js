@@ -217,7 +217,7 @@ async function onMessage(event, message) {
     if (message.text && message.text.startsWith("/start ")) {
         const file = message.text.split("/start ")[1];
         try {
-            atob(file);
+            atob(file);  // Validate base64 encoding
         } catch {
             return await sendMessage(message.chat.id, message.message_id, ERROR_407.description);
         }
@@ -292,6 +292,22 @@ async function onMessage(event, message) {
     }
 
     // Send the message with file details
-    return sendMessage(message.chat.id, message.message_id, final_text);
-}
-    
+    await sendMessage(message.chat.id, message.message_id, final_text);
+
+    // Optional: Store the information (if needed for later retrieval or database storage)
+    try {
+        // Example of saving the file details, you can replace with actual database/storage logic
+        await saveFileDetails({
+            chat_id: message.chat.id,
+            file_id: fID,
+            file_name: fName,
+            file_hash: final_hash,
+            download_link: final_link,
+            stream_link: final_stre
+        });
+    } catch (err) {
+        console.error("Error storing file details:", err);
+    }
+
+    return;
+                }
