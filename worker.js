@@ -199,44 +199,43 @@ async function onMessage(event, message) {
 
     // ---------- Message Listener Continued ---------- //
 
-    if (message.chat.id !== BOT_CHANNEL) {
-        // Only allow the bot to interact in the specified channel
-        await sendMessage(message.chat.id, message.message_id, "This bot only works in the authorized channel.");
-        return;
-    }
-
-    if (message.text && message.text.startsWith("/start")) {
-        // Respond to the /start command
-        await sendMessage(message.chat.id, message.message_id, "Welcome! This bot is ready to handle file streaming.");
-        return;
-    }
-
-    if (message.document) {
-        fID = message.document.file_id;
-        fName = message.document.file_name;
-        fType = message.document.mime_type;
-    } else if (message.photo) {
-        fID = message.photo[message.photo.length - 1].file_id;
-        fName = message.photo[message.photo.length - 1].file_unique_id + ".jpg";
-        fType = "image/jpg";
-    } else if (message.audio) {
-        fID = message.audio.file_id;
-        fName = message.audio.file_name;
-        fType = message.audio.mime_type;
-    } else if (message.video) {
-        fID = message.video.file_id;
-        fName = message.video.file_name;
-        fType = message.video.mime_type;
-    } else {
-        // Unsupported file type
-        await sendMessage(message.chat.id, message.message_id, "Unsupported file type.");
-        return;
-    }
-
-    // Generate unique URL for file download
-    const fSave = `${-BOT_CHANNEL * SIA_NUMBER}/${message.message_id * SIA_NUMBER}`;
-    const fileUrl = `${url.origin}/?file=${btoa(fSave)}`;
-
-    // Send file download link
-    await sendMessage(message.chat.id, message.message_id, `Here is your download link:\n${fileUrl}`);
+if (message.chat.id !== BOT_CHANNEL) {
+    // Only allow the bot to interact in the specified channel
+    await sendMessage(message.chat.id, message.message_id, "This bot only works in the authorized channel.");
+    return;
 }
+
+if (message.text && message.text.startsWith("/start")) {
+    // Respond to the /start command
+    await sendMessage(message.chat.id, message.message_id, "Welcome! This bot is ready to handle file streaming.");
+    return;
+}
+
+if (message.document) {
+    fID = message.document.file_id;
+    fName = message.document.file_name;
+    fType = message.document.mime_type;
+} else if (message.photo) {
+    fID = message.photo[message.photo.length - 1].file_id;
+    fName = message.photo[message.photo.length - 1].file_unique_id + ".jpg";
+    fType = "image/jpg";
+} else if (message.audio) {
+    fID = message.audio.file_id;
+    fName = message.audio.file_name;
+    fType = message.audio.mime_type;
+} else if (message.video) {
+    fID = message.video.file_id;
+    fName = message.video.file_name;
+    fType = message.video.mime_type;
+} else {
+    // Unsupported file type
+    await sendMessage(message.chat.id, message.message_id, "Unsupported file type.");
+    return;
+}
+
+// Assign the value to the already declared fSave
+fSave = `${-BOT_CHANNEL * SIA_NUMBER}/${message.message_id * SIA_NUMBER}`;
+const fileUrl = `${url.origin}/?file=${btoa(fSave)}`;
+
+// Send file download link
+await sendMessage(message.chat.id, message.message_id, `Here is your download link:\n${fileUrl}`);
